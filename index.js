@@ -13,7 +13,7 @@ let findParticipant = (leftParticipant) => {
   return participants.map((p) => p.user_id).indexOf(leftParticipant.user_id)
 }
 
-app.use(cors())
+// app.use(cors())
 
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
