@@ -291,8 +291,7 @@ app.get("/poll", (req, res) => {
 
     // send memberList as answer
     res.send(data.report_polling)
-  }
-  res.send([])
+  } else res.send([])
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
