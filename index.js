@@ -12,7 +12,6 @@ const port = process.env.PORT || 3000
 const memberList = JSON.parse(fs.readFileSync("data/memberList.json"))
 
 // variables
-let dataFileName = `data/${date.toISOString().slice(0, 10)}.json`
 
 // Where we will keep our main data
 let data = {
@@ -21,6 +20,8 @@ let data = {
   report_meeting: {},
   report_polling: {},
 }
+
+let dataFileName
 // data = JSON.parse(fs.readFileSync(dataFileName))
 
 let user_info_regex = / ?(\||-|_) ?/gm
@@ -63,7 +64,7 @@ let findParticipant = (where, what) => {
 }
 
 // save our data object to a JSON file
-const saveToDatabase = () => {
+const saveToDatabase = (dataFileName) => {
   fs.writeFileSync(dataFileName, JSON.stringify(data))
 }
 
@@ -73,7 +74,12 @@ const poll = () => {
   let notAttendedMembers = []
   let verifiedMemebers = []
   let declinedMembers = []
-  let meetingDuration = data.report_meeting.duration
+  let meetingDuration =
+    data.report_meeting.duration ||
+    timeDiff(
+      data.report_meeting.start_time,
+      new Date(new Date().toLocaleString("en")).toISOString()
+    )
 
   // ------------------------------------------------------
   notAttendedMembers = memberList.filter((member) => {
@@ -113,7 +119,7 @@ const poll = () => {
   data.report_polling.declined_members = declinedMembers
   data.report_polling.not_attended_members = notAttendedMembers
 
-  saveToDatabase()
+  saveToDatabase(dataFileName)
 }
 
 // set cors
@@ -125,10 +131,16 @@ app.use(bodyParser.json())
 
 // API
 
+// POST requests
+
 // when the meeting started
 app.post("/meeting_started", (req, res) => {
   // the meeting info that zoom sent us
   meetingInfo = req.body.payload.object
+
+  dataFileName = `data/${date.toISOString().slice(0, 10)}_${
+    meetingInfo.uuid
+  }.json`
 
   // save mmeting info to an object
   data.report_meeting = {
@@ -143,7 +155,7 @@ app.post("/meeting_started", (req, res) => {
   res.end()
 
   // save data to a JSON file and clear variables
-  saveToDatabase()
+  saveToDatabase(dataFileName)
   clearVariables()
 })
 
@@ -179,7 +191,7 @@ app.post("/join", (req, res) => {
   res.end()
 
   // save data to a JSON file and clear variables
-  saveToDatabase()
+  saveToDatabase(dataFileName)
   clearVariables()
 })
 
@@ -230,14 +242,57 @@ app.post("/left", (req, res) => {
   res.end()
 
   // save data to a JSON file and clear variables
-  saveToDatabase()
+  saveToDatabase(dataFileName)
   clearVariables()
 })
 
+//GET requests
+
 // to learn meeting status
-app.get("/status", (req, res) => {
+app.get("/all", (req, res) => {
   // send our data object as answer
   res.send(data)
+})
+
+// to get participant list
+app.get("/participants", (req, res) => {
+  // send participant list as answer
+  res.send(data.participants)
+})
+
+// to get per participant reports
+app.get("/reportPerParticipant", (req, res) => {
+  // send per participant reports as answer
+  res.send(data.report_per_participant)
+})
+
+// to get meeting report
+app.get("/reportMeeting", (req, res) => {
+  // send meeting report as answer
+  res.send(data.report_meeting)
+})
+
+// to get polling report
+app.get("/reportPolling", (req, res) => {
+  // send polling report as answer
+  res.send(data.report_polling)
+})
+
+// to get member list
+app.get("/memberList", (req, res) => {
+  // send memberList as answer
+  res.send(memberList)
+})
+
+// to poll
+app.get("/poll", (req, res) => {
+  if (!dataFileName) {
+    poll()
+
+    // send memberList as answer
+    res.send(data.report_polling)
+  }
+  res.send([])
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
