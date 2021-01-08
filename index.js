@@ -96,6 +96,11 @@ const poll = () => {
     console.log("true")
     return true
   })
+
+  notAttendedMembers.forEach((member) => {
+    member.attendDuration = 0
+    member.here = false
+  })
   // ------------------------------------------------------
 
   attendedMembers.forEach((member) => {
