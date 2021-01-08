@@ -118,6 +118,7 @@ const poll = () => {
   data.report_polling.verified_members = verifiedMemebers
   data.report_polling.declined_members = declinedMembers
   data.report_polling.not_attended_members = notAttendedMembers
+  data.report_polling.members = attendedMembers.concat(notAttendedMembers)
 
   saveToDatabase(dataFileName)
 }
