@@ -144,9 +144,7 @@ app.post("/meeting_started", (req, res) => {
   // the meeting info that zoom sent us
   meetingInfo = req.body.payload.object
 
-  dataFileName = `data/${date.toISOString().slice(0, 10)}_${
-    meetingInfo.uuid
-  }.json`
+  dataFileName = `data/${meetingInfo.uuid}.json`
 
   // save mmeting info to an object
   data.report_meeting = {
