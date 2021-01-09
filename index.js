@@ -150,7 +150,7 @@ app.post("/meeting_started", (req, res) => {
 
   // save mmeting info to an object
   data.report_meeting = {
-    uuid: meetingInfo.uuid,
+    id: meetingInfo.uuid,
     topic: meetingInfo.topic,
     host_id: meetingInfo.host_id,
     start_time: meetingInfo.start_time,
