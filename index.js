@@ -9,7 +9,7 @@ const { report } = require("process")
 const date = new Date()
 const app = express()
 const port = process.env.PORT || 3000
-const memberList = JSON.parse(fs.readFileSync("data/memberList.json"))
+const memberList = JSON.parse(fs.readFileSync("data/constant/memberList.json"))
 
 // variables
 
@@ -309,9 +309,24 @@ app.get("/poll", (req, res) => {
   if (!dataFileName) {
     poll()
 
-    // send memberList as answer
+    // send data.report_polling as answer
     res.send(data.report_polling)
   } else res.send([])
+})
+
+// to get list of meetings
+app.get("/meetings", (req, res) => {
+  let meetings = []
+  let meetingFiles = fs.readdirSync("data/")
+  meetingFiles.splice(meetingFiles.indexOf("constant"), 1)
+
+  meetingFiles.forEach((file) => {
+    console.log(file)
+    meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)))
+  })
+
+  // send meetings as answer
+  res.send(meetings)
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
