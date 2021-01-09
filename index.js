@@ -268,34 +268,59 @@ app.post("/left", (req, res) => {
 
 //GET requests
 
+// to get list of meetings
+app.get("/meetings", (req, res) => {
+  let meetings = []
+  let meetingFiles = fs.readdirSync("data/")
+  meetingFiles.splice(meetingFiles.indexOf("constant"), 1)
+
+  meetingFiles.forEach((file) => {
+    console.log(file)
+    meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)))
+  })
+
+  // send meetings as answer
+  res.send(meetings)
+})
+
 // to learn meeting status
-app.get("/all", (req, res) => {
-  // send our data object as answer
-  res.send(data)
+app.get("/all/:meetingId", (req, res) => {
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+
+  // send meeting object as answer
+  res.send(meeting)
 })
 
 // to get participant list
-app.get("/participants", (req, res) => {
+app.get("/participants/:meetingId", (req, res) => {
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+
   // send participant list as answer
-  res.send(data.participants)
+  res.send(meeting.participants)
 })
 
 // to get per participant reports
-app.get("/reportPerParticipant", (req, res) => {
+app.get("/reportPerParticipant/:meetingId", (req, res) => {
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+
   // send per participant reports as answer
-  res.send(data.report_per_participant)
+  res.send(meeting.report_per_participant)
 })
 
 // to get meeting report
-app.get("/reportMeeting", (req, res) => {
+app.get("/reportMeeting/:meetingId", (req, res) => {
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+
   // send meeting report as answer
-  res.send(data.report_meeting)
+  res.send(meeting.report_meeting)
 })
 
 // to get polling report
-app.get("/reportPolling", (req, res) => {
+app.get("/reportPolling/:meetingId", (req, res) => {
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+
   // send polling report as answer
-  res.send(data.report_polling)
+  res.send(meeting.report_polling)
 })
 
 // to get member list
@@ -312,21 +337,6 @@ app.get("/poll", (req, res) => {
     // send data.report_polling as answer
     res.send(data.report_polling)
   } else res.send([])
-})
-
-// to get list of meetings
-app.get("/meetings", (req, res) => {
-  let meetings = []
-  let meetingFiles = fs.readdirSync("data/")
-  meetingFiles.splice(meetingFiles.indexOf("constant"), 1)
-
-  meetingFiles.forEach((file) => {
-    console.log(file)
-    meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)))
-  })
-
-  // send meetings as answer
-  res.send(meetings)
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
