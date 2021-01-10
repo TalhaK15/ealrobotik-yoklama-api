@@ -76,9 +76,11 @@ const poll = () => {
   let declinedMembers = []
   let meetingDuration =
     data.report_meeting.duration ||
-    timeDiff(
-      data.report_meeting.start_time,
-      new Date(new Date().toLocaleString("en")).toISOString()
+    Math.floor(
+      timeDiff(
+        data.report_meeting.start_time,
+        new Date(new Date().toLocaleString("en")).toISOString()
+      )
     )
 
   // ------------------------------------------------------
@@ -274,7 +276,7 @@ app.get("/meetings", (req, res) => {
 
   meetingFiles.forEach((file) => {
     console.log(file)
-    meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)))
+    meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)).report_meeting)
   })
 
   // send meetings as answer
@@ -290,11 +292,9 @@ app.get("/all/:meetingId", (req, res) => {
 })
 
 // to get participant list
-app.get("/participants/:meetingId", (req, res) => {
-  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
-
+app.get("/participants", (req, res) => {
   // send participant list as answer
-  res.send(meeting.participants)
+  res.send(data.participants)
 })
 
 // to get per participant reports
