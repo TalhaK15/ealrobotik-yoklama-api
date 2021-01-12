@@ -282,8 +282,16 @@ app.get("/meetings", (req, res) => {
   // send meetings as answer
   res.send([
     {
+      id: "333333",
+      topic: "Meeting Topic 1",
+      host_id: "uLoRgfbbTayCX6r2QQsQ",
+      start_time: "2021-01-12T05:30:00Z",
+      end_time: null,
+      duration: null,
+    },
+    {
       id: "111111",
-      topic: "Meeting 1",
+      topic: "Meeting Topic 2",
       host_id: "uLoRgfbbyCX6r2Q_qQsQ",
       start_time: "2021-01-06T08:00:00Z",
       end_time: "2021-01-06T09:00:00Z",
@@ -291,19 +299,11 @@ app.get("/meetings", (req, res) => {
     },
     {
       id: "222222",
-      topic: "Meeting 2",
+      topic: "Meeting Topic 3",
       host_id: "uLobbTayCX6r2Q_qQsQ",
       start_time: "2021-01-07T08:00:00Z",
       end_time: "2021-01-07T09:00:00Z",
-      duration: 60,
-    },
-    {
-      id: "333333",
-      topic: "Meeting 3",
-      host_id: "uLoRgfbbTayCX6r2QQsQ",
-      start_time: "2021-01-10T11:30:00Z",
-      end_time: null,
-      duration: null,
+      duration: 55,
     },
   ])
 })
@@ -368,10 +368,10 @@ app.get("/reportPolling/:meetingId", (req, res) => {
   res.send({
     verified_members: [
       {
-        user_name: "Mehmet Soyadi",
+        id: "222222222",
+        user_name: "Engin Ege Es",
         user_number: 999,
         user_class: "9/B",
-        id: "222222222",
         report_time: [
           {
             join_time: "2021-01-06T08:01:00Z",
@@ -384,10 +384,10 @@ app.get("/reportPolling/:meetingId", (req, res) => {
     ],
     declined_members: [
       {
+        id: "111111111",
         user_name: "Talha Karasu",
         user_number: 136,
         user_class: "9/A",
-        id: "111111111",
         report_time: [
           {
             join_time: "2021-01-06T08:00:00Z",
@@ -408,18 +408,18 @@ app.get("/reportPolling/:meetingId", (req, res) => {
     ],
     not_attended_members: [
       {
-        user_name: "Bbbb Bbbb",
+        user_name: "Ibrahim Karuc",
         user_number: 123,
         user_class: "9/C",
         id: "333333333",
-        attendDuration: 53,
+        attendDuration: 0,
         here: false,
       },
     ],
     members: [
       {
         id: "222222222",
-        user_name: "Mehmet Soyadi",
+        user_name: "Engin Ege Es",
         user_number: 999,
         user_class: "9/A",
         report_time: [
@@ -455,7 +455,7 @@ app.get("/reportPolling/:meetingId", (req, res) => {
       },
       {
         id: "333333333",
-        user_name: "Bbbb Bbbb",
+        user_name: "Ibrahim Karuc",
         user_number: 123,
         user_class: "9/C",
         attendDuration: 0,
