@@ -23,7 +23,7 @@ let data = {
 let dataFileName
 // data = JSON.parse(fs.readFileSync(dataFileName))
 
-let user_info_regex = / ?(\||-|_) ?/gm
+let user_info_regex = /((9\/[A-z]) ?(\||-|_|))? ?([0-9]{3}) ?(\||-|_|) ?(([A-z]+ ?){2})/gm
 
 let userName
 
@@ -35,6 +35,24 @@ let newReport
 let userInfo
 
 // functions
+
+let adminControl = (name) => {
+  let adminList = [
+    "faruk oluşan",
+    "faruk yiğit oluşan",
+    "ayberk köroğlu",
+    "tankut yavaş",
+    "bora çetkin",
+    "barboros",
+    "barboros sivrikaya",
+    "ahmet turan kurt",
+  ]
+  for (let admin of adminList) {
+    if (admin == name.toLowerCase()) return true
+    else continue
+  }
+  return false
+}
 
 //clear variables
 let clearVariables = () => {
@@ -190,21 +208,29 @@ app.post("/join", (req, res) => {
   // the participant info that zoom sent us
   joinedParticipant = req.body.payload.object.participant
 
-  joinedParticipant = {
-    id: joinedParticipant.id,
-    user_name: joinedParticipant.user_name,
-    join_time: joinedParticipant.join_time,
+  if (adminControl(joinedParticipant.user_name)) {
+    console.log("Admin joined")
+  } else {
+    userInfo = user_info_regex.exec(joinedParticipant.user_name)
+
+    joinedParticipant = {
+      id: joinedParticipant.id,
+      user_name: userInfo[6],
+      user_number: userInfo[4],
+      user_class: userInfo[2] == undefined ? "undefined" : userInfo[2],
+      join_time: joinedParticipant.join_time,
+    }
+
+    // save new participant to our data object
+    data.participants.push(joinedParticipant)
+
+    // end the query
+    res.end()
+
+    // save data to a JSON file and clear variables
+    saveToDatabase(dataFileName)
+    clearVariables()
   }
-
-  // save new participant to our data object
-  data.participants.push(joinedParticipant)
-
-  // end the query
-  res.end()
-
-  // save data to a JSON file and clear variables
-  saveToDatabase(dataFileName)
-  clearVariables()
 })
 
 // when a participant or host left
@@ -212,50 +238,54 @@ app.post("/left", (req, res) => {
   // the participant info that zoom sent us
   leftParticipant = req.body.payload.object.participant
 
-  //some variables to detect who is left and when was he/she join
-  joinedParticipant =
-    data.participants[findParticipant(data.participants, leftParticipant.id)]
-  reportIndex = findParticipant(data.report_per_participant, leftParticipant.id)
-  newReport = {
-    join_time: joinedParticipant.join_time,
-    leave_time: leftParticipant.leave_time,
-  }
-
-  // was he/she left this meeting before?
-  if (reportIndex > -1) {
-    // yes...
-    data.report_per_participant[reportIndex].report_time.push(newReport)
+  if (adminControl(joinedParticipant.user_name)) {
+    console.log("Admin left")
   } else {
-    // no...
-    userInfo = leftParticipant.user_name
-      .replaceAll(user_info_regex, " ")
-      .split(" ")
-    userName = userInfo.slice(2, userInfo.length).join(" ")
-
-    participant = {
-      user_name: userName,
-      user_number: userInfo[1],
-      user_class: userInfo[0],
-      id: leftParticipant.id,
-      report_time: [newReport],
+    //some variables to detect who is left and when was he/she join
+    joinedParticipant =
+      data.participants[findParticipant(data.participants, leftParticipant.id)]
+    reportIndex = findParticipant(
+      data.report_per_participant,
+      leftParticipant.id
+    )
+    newReport = {
+      join_time: joinedParticipant.join_time,
+      leave_time: leftParticipant.leave_time,
     }
 
-    // save his\her info to our data object
-    data.report_per_participant.push(participant)
+    // was he/she left this meeting before?
+    if (reportIndex > -1) {
+      // yes...
+      data.report_per_participant[reportIndex].report_time.push(newReport)
+    } else {
+      // no...
+      userInfo = user_info_regex.exec(joinedParticipant.user_name)
+
+      participant = {
+        id: leftParticipant.id,
+        user_name: userInfo[6],
+        user_number: userInfo[4],
+        user_class: userInfo[2] == undefined ? "undefined" : userInfo[2],
+        report_time: [newReport],
+      }
+
+      // save his\her info to our data object
+      data.report_per_participant.push(participant)
+    }
+
+    // remove him/her from participants list (in our data object)
+    data.participants.splice(
+      findParticipant(data.participants, leftParticipant.id),
+      1
+    )
+
+    // end the query
+    res.end()
+
+    // save data to a JSON file and clear variables
+    saveToDatabase(dataFileName)
+    clearVariables()
   }
-
-  // remove him/her from participants list (in our data object)
-  data.participants.splice(
-    findParticipant(data.participants, leftParticipant.id),
-    1
-  )
-
-  // end the query
-  res.end()
-
-  // save data to a JSON file and clear variables
-  saveToDatabase(dataFileName)
-  clearVariables()
 })
 
 //GET requests
