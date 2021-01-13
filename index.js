@@ -3,7 +3,6 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 const fs = require("fs")
-const { report } = require("process")
 
 // consonants
 const date = new Date()
@@ -191,16 +190,9 @@ app.post("/join", (req, res) => {
   // the participant info that zoom sent us
   joinedParticipant = req.body.payload.object.participant
 
-  userInfo = joinedParticipant.user_name
-    .replaceAll(user_info_regex, " ")
-    .split(" ")
-  userName = userInfo.slice(2, userInfo.length).join(" ")
-
   joinedParticipant = {
     id: joinedParticipant.id,
-    user_name: userName,
-    user_number: userInfo[1],
-    user_class: userInfo[0],
+    user_name: joinedParticipant.user_name,
     join_time: joinedParticipant.join_time,
   }
 
