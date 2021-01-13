@@ -3,7 +3,6 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 const fs = require("fs")
-const { report } = require("process")
 
 // consonants
 const date = new Date()
@@ -191,16 +190,9 @@ app.post("/join", (req, res) => {
   // the participant info that zoom sent us
   joinedParticipant = req.body.payload.object.participant
 
-  userInfo = joinedParticipant.user_name
-    .replaceAll(user_info_regex, " ")
-    .split(" ")
-  userName = userInfo.slice(2, userInfo.length).join(" ")
-
   joinedParticipant = {
     id: joinedParticipant.id,
-    user_name: userName,
-    user_number: userInfo[1],
-    user_class: userInfo[0],
+    user_name: joinedParticipant.user_name,
     join_time: joinedParticipant.join_time,
   }
 
@@ -322,23 +314,17 @@ app.get("/participants", (req, res) => {
   res.send([
     {
       id: "ZHuwL745TyaVmJ5PsiFsIQ",
-      user_name: "Talha Karasu",
-      user_number: 136,
-      user_class: "9/A",
+      user_name: "zzzzzTalha Karasu",
       join_time: "2021-01-06T15:37:18Z",
     },
     {
       id: "Bkjgasd7GVBDi7ajl8H6qI",
-      user_name: "Faruk Olusan",
-      user_number: 358,
-      user_class: "9/B",
+      user_name: "zzzzzzFaruk Olusan",
       join_time: "2021-01-06T15:38:18Z",
     },
     {
       id: "Nhasdjn8Oaso8AHShndO8Q",
-      user_name: "Bora Cetkin",
-      user_number: 756,
-      user_class: "9/C",
+      user_name: "zzzzzzBora Cetkin",
       join_time: "2021-01-06T15:39:18Z",
     },
   ])
