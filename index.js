@@ -302,32 +302,7 @@ app.get("/meetings", (req, res) => {
   })
 
   // send meetings as answer
-  res.send([
-    {
-      id: "333333",
-      topic: "Meeting Topic 1",
-      host_id: "uLoRgfbbTayCX6r2QQsQ",
-      start_time: "2021-01-12T05:30:00Z",
-      end_time: null,
-      duration: null,
-    },
-    {
-      id: "111111",
-      topic: "Meeting Topic 2",
-      host_id: "uLoRgfbbyCX6r2Q_qQsQ",
-      start_time: "2021-01-06T08:00:00Z",
-      end_time: "2021-01-06T09:00:00Z",
-      duration: 60,
-    },
-    {
-      id: "222222",
-      topic: "Meeting Topic 3",
-      host_id: "uLobbTayCX6r2Q_qQsQ",
-      start_time: "2021-01-07T08:00:00Z",
-      end_time: "2021-01-07T09:00:00Z",
-      duration: 55,
-    },
-  ])
+  res.send(meetings)
 })
 
 // to learn meeting status
@@ -341,23 +316,7 @@ app.get("/all/:meetingId", (req, res) => {
 // to get participant list
 app.get("/participants", (req, res) => {
   // send participant list as answer
-  res.send([
-    {
-      id: "ZHuwL745TyaVmJ5PsiFsIQ",
-      user_name: "zzzzzTalha Karasu",
-      join_time: "2021-01-06T15:37:18Z",
-    },
-    {
-      id: "Bkjgasd7GVBDi7ajl8H6qI",
-      user_name: "zzzzzzFaruk Olusan",
-      join_time: "2021-01-06T15:38:18Z",
-    },
-    {
-      id: "Nhasdjn8Oaso8AHShndO8Q",
-      user_name: "zzzzzzBora Cetkin",
-      join_time: "2021-01-06T15:39:18Z",
-    },
-  ])
+  res.send(data.participants)
 })
 
 // to get per participant reports
@@ -378,107 +337,10 @@ app.get("/reportMeeting/:meetingId", (req, res) => {
 
 // to get polling report
 app.get("/reportPolling/:meetingId", (req, res) => {
-  //let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
 
   // send polling report as answer
-  res.send({
-    verified_members: [
-      {
-        id: "222222222",
-        user_name: "Engin Ege Es",
-        user_number: 999,
-        user_class: "9/B",
-        report_time: [
-          {
-            join_time: "2021-01-06T08:01:00Z",
-            leave_time: "2021-01-06T08:59:00Z",
-          },
-        ],
-        attendDuration: 58,
-        here: true,
-      },
-    ],
-    declined_members: [
-      {
-        id: "111111111",
-        user_name: "Talha Karasu",
-        user_number: 136,
-        user_class: "9/A",
-        report_time: [
-          {
-            join_time: "2021-01-06T08:00:00Z",
-            leave_time: "2021-01-06T08:05:00Z",
-          },
-          {
-            join_time: "2021-01-06T08:07:00Z",
-            leave_time: "2021-01-06T08:50:00Z",
-          },
-          {
-            join_time: "2021-01-06T08:55:00Z",
-            leave_time: "2021-01-06T09:00:00Z",
-          },
-        ],
-        attendDuration: 53,
-        here: false,
-      },
-    ],
-    not_attended_members: [
-      {
-        user_name: "Ibrahim Karuc",
-        user_number: 123,
-        user_class: "9/C",
-        id: "333333333",
-        attendDuration: 0,
-        here: false,
-      },
-    ],
-    members: [
-      {
-        id: "222222222",
-        user_name: "Engin Ege Es",
-        user_number: 999,
-        user_class: "9/A",
-        report_time: [
-          {
-            join_time: "2021-01-06T08:01:00Z",
-            leave_time: "2021-01-06T08:59:00Z",
-          },
-        ],
-        attendDuration: 58,
-        here: true,
-      },
-      {
-        id: "111111111",
-        user_name: "Talha Karasu",
-        user_number: 136,
-        user_class: "9/A",
-        report_time: [
-          {
-            join_time: "2021-01-06T08:00:00Z",
-            leave_time: "2021-01-06T08:05:00Z",
-          },
-          {
-            join_time: "2021-01-06T08:07:00Z",
-            leave_time: "2021-01-06T08:50:00Z",
-          },
-          {
-            join_time: "2021-01-06T08:55:00Z",
-            leave_time: "2021-01-06T09:00:00Z",
-          },
-        ],
-        attendDuration: 53,
-        here: false,
-      },
-      {
-        id: "333333333",
-        user_name: "Ibrahim Karuc",
-        user_number: 123,
-        user_class: "9/C",
-        attendDuration: 0,
-        here: false,
-      },
-    ],
-  })
+  res.send(meeting.report_polling)
 })
 
 // to get member list
