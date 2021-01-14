@@ -25,8 +25,7 @@ let dataFileName
 
 let user_info_regex = /((9\/[A-z]) ?(\||-|_|))? ?([0-9]{3}) ?(\||-|_|) ?(([A-z]+ ?){2})/gm
 
-let userName
-
+let meetingInfo
 let joinedParticipant
 let leftParticipant
 let participant
@@ -58,7 +57,6 @@ let adminControl = (name) => {
 //clear variables
 let clearVariables = () => {
   userInfo = null
-  userName = null
   joinedParticipant = null
   leftParticipant = null
   participant = null
@@ -104,16 +102,15 @@ const poll = () => {
   // ------------------------------------------------------
   notAttendedMembers = memberList.filter((member) => {
     for (let i = 0; i < attendedMembers.length; i++) {
-      console.log(attendedMembers[i].user_name, "----", member.user_name)
-      if (attendedMembers[i].user_name == member.user_name) {
-        console.log("false")
+      if (
+        attendedMembers[i].user_name.toLowerCase() ==
+        member.user_name.toLowerCase()
+      ) {
         return false
       } else {
-        console.log("else")
         continue
       }
     }
-    console.log("true")
     return true
   })
 
@@ -201,6 +198,12 @@ app.post("/meeting_ended", (req, res) => {
 
   // poll and clear variables
   poll()
+  data = {
+    participants: [],
+    report_per_participant: [],
+    report_meeting: {},
+    report_polling: {},
+  }
   clearVariables()
 })
 
@@ -239,7 +242,7 @@ app.post("/left", (req, res) => {
   // the participant info that zoom sent us
   leftParticipant = req.body.payload.object.participant
 
-  if (adminControl(joinedParticipant.user_name)) {
+  if (adminControl(leftParticipant.user_name)) {
     console.log("Admin left")
   } else {
     //some variables to detect who is left and when was he/she join
@@ -260,7 +263,7 @@ app.post("/left", (req, res) => {
       data.report_per_participant[reportIndex].report_time.push(newReport)
     } else {
       // no...
-      userInfo = user_info_regex.exec(joinedParticipant.user_name)
+      userInfo = user_info_regex.exec(leftParticipant.user_name)
 
       participant = {
         id: leftParticipant.id,
@@ -301,6 +304,8 @@ app.get("/meetings", (req, res) => {
     console.log(file)
     meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)).report_meeting)
   })
+
+  if (data.participants != []) meetings.push(data.report_meeting)
 
   // send meetings as answer
   res.send(meetings)
