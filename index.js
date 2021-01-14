@@ -71,7 +71,7 @@ const timeDiff = (joinTime, leaveTime) => {
   leaveTime = new Date(leaveTime)
   let diff = Math.abs((leaveTime - joinTime) / 36e5)
 
-  return diff * 60
+  return Math.ceil(diff * 60)
 }
 
 // for find the participant who left from the meeting
