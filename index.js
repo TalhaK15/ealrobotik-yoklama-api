@@ -46,6 +46,7 @@ let adminControl = (name) => {
     "barboros",
     "barboros sivrikaya",
     "ahmet turan kurt",
+    "eren güvenç",
   ]
   for (let admin of adminList) {
     if (admin == name.toLowerCase()) return true
@@ -129,7 +130,7 @@ const poll = () => {
     })
 
     member.attendDuration = attendDurationByMinute
-    if (attendDurationByMinute >= (meetingDuration / 100) * 90) {
+    if (attendDurationByMinute >= (meetingDuration / 100) * 80) {
       member.here = true
       verifiedMemebers.push(member)
     } else {
