@@ -160,6 +160,7 @@ app.use(bodyParser.json())
 app.post("/meeting_started", (req, res) => {
   // the meeting info that zoom sent us
   meetingInfo = req.body.payload.object
+  meetingInfo.uuid = meetingInfo.uuid.replaceAll("/", "")
 
   dataFileName = `data/${meetingInfo.uuid}.json`
 
