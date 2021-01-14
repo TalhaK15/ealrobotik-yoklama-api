@@ -306,8 +306,6 @@ app.get("/meetings", (req, res) => {
     meetings.push(JSON.parse(fs.readFileSync(`data/${file}`)).report_meeting)
   })
 
-  if (data.participants != []) meetings.push(data.report_meeting)
-
   // send meetings as answer
   res.send(meetings)
 })
