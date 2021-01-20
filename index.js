@@ -295,6 +295,10 @@ app.post("/left", (req, res) => {
 
 //GET requests
 
+app.get("/", (req, res) => {
+  res.end()
+})
+
 // to get list of meetings
 app.get("/meetings", (req, res) => {
   let meetings = []
