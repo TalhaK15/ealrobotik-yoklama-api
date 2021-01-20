@@ -23,7 +23,7 @@ let data = {
 let dataFileName
 // data = JSON.parse(fs.readFileSync(dataFileName))
 
-let user_info_regex = /((9\/[A-z]) ?(\||-|_|))? ?([0-9]{3}) ?(\||-|_|) ?(([A-z]+ ?){2})/
+let user_info_regex = /((9\/[A-z]) ?(\||-|_|))? ?([0-9]{3}) ?(\||-|_|) ?(([A-z]+ ?){2,})/
 
 let meetingInfo
 let joinedParticipant
