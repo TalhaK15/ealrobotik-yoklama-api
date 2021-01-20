@@ -245,7 +245,10 @@ app.post("/left", (req, res) => {
 
   if (adminControl(leftParticipant.user_name)) {
     console.log("Admin left")
-  } else {
+  } else if (
+    data.participants[findParticipant(data.participants, leftParticipant.id)] !=
+    (undefined || null)
+  ) {
     //some variables to detect who is left and when was he/she join
     joinedParticipant =
       data.participants[findParticipant(data.participants, leftParticipant.id)]
@@ -254,7 +257,7 @@ app.post("/left", (req, res) => {
       leftParticipant.id
     )
     newReport = {
-      join_time: joinedParticipant.join_time,
+      join_time: leftParticipant.join_time,
       leave_time: leftParticipant.leave_time,
     }
 
@@ -283,14 +286,14 @@ app.post("/left", (req, res) => {
       findParticipant(data.participants, leftParticipant.id),
       1
     )
-
-    // end the query
-    res.end()
-
-    // save data to a JSON file and clear variables
-    saveToDatabase(dataFileName)
-    clearVariables()
   }
+
+  // end the query
+  res.end()
+
+  // save data to a JSON file and clear variables
+  saveToDatabase(dataFileName)
+  clearVariables()
 })
 
 //GET requests
