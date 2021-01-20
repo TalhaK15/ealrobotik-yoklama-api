@@ -316,7 +316,7 @@ app.get("/meetings", (req, res) => {
 
 // to learn meeting status
 app.get("/all/:meetingId", (req, res) => {
-  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}.json`))
 
   // send meeting object as answer
   res.send(meeting)
@@ -330,7 +330,7 @@ app.get("/participants", (req, res) => {
 
 // to get per participant reports
 app.get("/reportPerParticipant/:meetingId", (req, res) => {
-  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}.json`))
 
   // send per participant reports as answer
   res.send(meeting.report_per_participant)
@@ -338,7 +338,7 @@ app.get("/reportPerParticipant/:meetingId", (req, res) => {
 
 // to get meeting report
 app.get("/reportMeeting/:meetingId", (req, res) => {
-  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}.json`))
 
   // send meeting report as answer
   res.send(meeting.report_meeting)
@@ -346,7 +346,7 @@ app.get("/reportMeeting/:meetingId", (req, res) => {
 
 // to get polling report
 app.get("/reportPolling/:meetingId", (req, res) => {
-  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}`))
+  let meeting = JSON.parse(fs.readFileSync(`data/${req.params.meetingId}.json`))
 
   // send polling report as answer
   res.send(meeting.report_polling)
