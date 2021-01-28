@@ -266,7 +266,7 @@ app.post("/left", (req, res) => {
       leftParticipant.id || leftParticipant.user_id
     )
     newReport = {
-      join_time: leftParticipant.join_time,
+      join_time: joinedParticipant.join_time,
       leave_time: leftParticipant.leave_time,
     }
 
