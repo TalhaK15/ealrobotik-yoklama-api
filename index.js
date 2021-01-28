@@ -270,13 +270,6 @@ app.post("/left", (req, res) => {
       leave_time: leftParticipant.leave_time,
     }
 
-    console.log(
-      "Joined Participant : \n",
-      joinedParticipant,
-      "\nLeft Participant : \n",
-      leftParticipant
-    )
-
     // was he/she left this meeting before?
     if (reportIndex > -1) {
       // yes...
