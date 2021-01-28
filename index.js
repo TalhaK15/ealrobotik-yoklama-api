@@ -219,7 +219,7 @@ app.post("/join", (req, res) => {
     userInfo = user_info_regex.exec(joinedParticipant.user_name)
 
     joinedParticipant = {
-      id: joinedParticipant.id,
+      id: joinedParticipant.id || joinedParticipant.user_id,
       user_name: userInfo[6],
       user_number: userInfo[4],
       user_class: userInfo[2] == undefined ? "undefined" : userInfo[2],
@@ -246,15 +246,24 @@ app.post("/left", (req, res) => {
   if (adminControl(leftParticipant.user_name)) {
     console.log("Admin left")
   } else if (
-    data.participants[findParticipant(data.participants, leftParticipant.id)] !=
-    (undefined || null)
+    data.participants[
+      findParticipant(
+        data.participants,
+        leftParticipant.id || leftParticipant.user_id
+      )
+    ] != (undefined || null)
   ) {
     //some variables to detect who is left and when was he/she join
     joinedParticipant =
-      data.participants[findParticipant(data.participants, leftParticipant.id)]
+      data.participants[
+        findParticipant(
+          data.participants,
+          leftParticipant.id || leftParticipant.user_id
+        )
+      ]
     reportIndex = findParticipant(
       data.report_per_participant,
-      leftParticipant.id
+      leftParticipant.id || leftParticipant.user_id
     )
     newReport = {
       join_time: leftParticipant.join_time,
@@ -277,7 +286,7 @@ app.post("/left", (req, res) => {
       userInfo = user_info_regex.exec(leftParticipant.user_name)
 
       participant = {
-        id: leftParticipant.id,
+        id: leftParticipant.id || leftParticipant.user_id,
         user_name: userInfo[6],
         user_number: userInfo[4],
         user_class: userInfo[2] == undefined ? "undefined" : userInfo[2],
@@ -290,7 +299,10 @@ app.post("/left", (req, res) => {
 
     // remove him/her from participants list (in our data object)
     data.participants.splice(
-      findParticipant(data.participants, leftParticipant.id),
+      findParticipant(
+        data.participants,
+        leftParticipant.id || leftParticipant.user_id
+      ),
       1
     )
   }
